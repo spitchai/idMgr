@@ -21,8 +21,6 @@ class index {
   unsigned int start;
   unsigned int cap;
   unsigned int current;
-  unsigned int allocated;  /* total number of index that is allocated */
-  unsigned int released;   /* total number of index this is release */
 
   map<unsigned int, struct id>tMap;
   map<unsigned int, struct id*, greater<unsigned int>>idMap;
@@ -30,7 +28,6 @@ class index {
 
   void incCurrent(int size) {
     this->current += size;
-    this->allocated += size;
   }
 
   unsigned int getTransId() {
@@ -114,8 +111,6 @@ index::index(struct id i)
   this->start = i.start;
   this->cap = i.size;
   this->current = i.start;
-  this->released = 0;
-  this->allocated = 0;
 }
 
 void
@@ -124,9 +119,7 @@ index::indexShow()
   printf("index start         : %d\n", this->start);
   printf("index capacity      : %d\n", this->cap);
   printf("index current       : %d\n", this->current);
-  printf("index allocated     : %d\n", this->allocated);
-  printf("index released      : %d\n", this->released);
-  //printf("index reuse Q depth : %d\n", (int)this->reuse.size());
+  printf("index reuseAlloc    : %d\n", (int)this->idMap.size());
 }
 
 struct id
