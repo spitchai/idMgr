@@ -1,0 +1,24 @@
+Problem:
+  Write an index allocation library. The library manages an index space
+(range of indices) and provides allocation/deallocation routines.
+
+API Requirements:
+  Create an indexer specifying the starting index and the range.
+    - Returns an indexer handle that is passed to the allocation and
+      deallocation routines.
+
+  Allocate a block of indices.
+    - The size of the block is passed by the user. Returns the start index of
+      the block.
+
+  Free a previously allocated block of indices.
+    - The user passes the start index of the block
+
+Design requirements:
+  - Give due consideration to fragmentation issues.
+  - What are the different allocation strategies and how do they affect
+    fragmentation?
+
+The block can be of size 1 or any arbitrary size (as long as its less than the
+index space)
+Where tradeoff needs to be made favor CPU over memory
