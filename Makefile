@@ -1,5 +1,5 @@
 all: 
-	g++ -ggdb index.cpp -o index
+	g++ -ggdb ut_index.cpp -o index
 
 check: all 
 	./index

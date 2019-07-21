@@ -1,13 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <cstdlib>
+#include <limits.h>
+#include <unistd.h>
+#include <time.h>
+
 
 #include <vector>
 #include <queue>
-#include <time.h>
 #include <random>
-#include <limits.h>
 #include <map>
+#include <algorithm>
+#include <chrono>
 
 using namespace std;
 
@@ -30,9 +35,20 @@ class index {
     this->current += size;
   }
 
-  unsigned int getTransId() {
-    srand((unsigned)time(NULL));
-    return (rand() % UINT_MAX);
+  unsigned int getTransId()
+  {
+    unsigned seed = chrono::system_clock::now().time_since_epoch().count();
+    srand(seed);
+    auto ret = rand() % UINT_MAX;
+
+    auto it = this->tMap.find(ret);
+    while(it != this->tMap.end()) {
+      ret = rand() % UINT_MAX;
+      it = this->tMap.find(ret);
+    }
+
+    printf("tID : %d \n", ret);
+    return (ret);
   }
 
   /*
@@ -120,6 +136,8 @@ index::indexShow()
   printf("index capacity      : %d\n", this->cap);
   printf("index current       : %d\n", this->current);
   printf("index reuseAlloc    : %d\n", (int)this->idMap.size());
+  printf("index total alloc   : %d\n", (int)this->tMap.size());
+
 }
 
 struct id
