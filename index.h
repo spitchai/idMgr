@@ -46,8 +46,7 @@ class index {
       ret = rand() % UINT_MAX;
       it = this->tMap.find(ret);
     }
-
-    printf("tID : %d \n", ret);
+    //printf("tID : %d \n", ret);
     return (ret);
   }
 
@@ -135,7 +134,8 @@ index::indexShow()
   printf("index start         : %d\n", this->start);
   printf("index capacity      : %d\n", this->cap);
   printf("index current       : %d\n", this->current);
-  printf("index reuseAlloc    : %d\n", (int)this->idMap.size());
+  printf("index idMap         : %d\n", (int)this->idMap.size());
+  printf("index szMap         : %d\n", (int)this->sizeMap.size());
   printf("index total alloc   : %d\n", (int)this->tMap.size());
 
 }
@@ -158,6 +158,7 @@ index::indexDeAlloc(struct id index)
 {
   auto it = this->tMap.find(index.tId);
   if(it == this->tMap.end()) {
+    printf("Entry not present\n");
     return false;
   } else {
     tMap.erase(index.tId);
