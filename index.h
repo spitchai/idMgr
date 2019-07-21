@@ -87,8 +87,6 @@ class index {
 
     auto it = this->sizeMap.upper_bound(size);
     if(it != this->sizeMap.end()) {
-      assert(it->first >= size);
-
       struct id *ep = it->second;
       this->sizeMap.erase(it);
       this->idMap.erase(ep->start);
@@ -158,18 +156,18 @@ index::indexDeAlloc(struct id index)
 {
   auto it = this->tMap.find(index.tId);
   if(it == this->tMap.end()) {
-    printf("Entry not present\n");
+    //printf("Entry not present\n");
     return false;
   } else {
     tMap.erase(index.tId);
 
     /* lookup the id map and find the closet smaller one */
     auto it = this->idMap.lower_bound(index.start);
-    if(it != this->idMap.end()) {
-      /* check - if re-fragment is a option */
-      auto p = it->second;
-      if(p->start + p->size == index.start) {
+    /* check - if re-fragment is a option */
+    if((it != this->idMap.end()) && 
+        (it->second->start + it->second->size == index.start)) {
         /* reassemble the fragment @ id map */
+        auto p = it->second;
         p->size += index.size;
 
         /* reevaluate the size map */
@@ -181,7 +179,6 @@ index::indexDeAlloc(struct id index)
           }
         }
         this->sizeMap.insert(make_pair(p->size, p));
-      }
     } else {
       /* re-fragment is not an option */
       struct id *ep = new struct id;
