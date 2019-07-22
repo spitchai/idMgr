@@ -22,14 +22,31 @@ struct id {
   unsigned int tId; /* transaction id */
 };
 
+/* functor comparator */
+struct id_comp {
+  bool operator()(const unsigned int a, unsigned int b)
+  {
+    return (a < b);
+  }
+};
+
+/* functor comparator */
+struct size_comp {
+  bool operator()(const unsigned int a, unsigned int b)
+  {
+    return (a < b);
+  }
+};
+
 class index {
   unsigned int start;
   unsigned int cap;
   unsigned int current;
 
   map<unsigned int, struct id>tMap;
-  map<unsigned int, struct id*, greater<unsigned int>>idMap;
-  multimap<unsigned int, struct id*, greater<unsigned int>>sizeMap;
+  map<unsigned int, struct id*, id_comp>idMap;
+  multimap<unsigned int, struct id*, size_comp>sizeMap;
+  //multimap<unsigned int, struct id*, greater<unsigned int>>sizeMap;
 
   void incCurrent(int size) {
     this->current += size;
@@ -91,6 +108,7 @@ class index {
       this->sizeMap.erase(it);
       this->idMap.erase(ep->start);
 
+      //printf("reusing: size - %d reuse start - %d, reuse size - %d\n", size, ep->start, ep->size);
       ret.size = size;
       ret.start = ep->start;
       ret.tId = getTransId();
@@ -156,7 +174,7 @@ index::indexDeAlloc(struct id index)
 {
   auto it = this->tMap.find(index.tId);
   if(it == this->tMap.end()) {
-    //printf("Entry not present\n");
+    printf("Entry not present\n");
     return false;
   } else {
     tMap.erase(index.tId);
@@ -164,10 +182,12 @@ index::indexDeAlloc(struct id index)
     /* lookup the id map and find the closet smaller one */
     auto it = this->idMap.lower_bound(index.start);
     /* check - if re-fragment is a option */
-    if((it != this->idMap.end()) && 
+    if((it != this->idMap.end()) &&
         (it->second->start + it->second->size == index.start)) {
         /* reassemble the fragment @ id map */
         auto p = it->second;
+        //printf("reassembling: index(st %d, sz %d), p(st %d, sz %d)\n",
+        //        index.start, index.size, p->start, p->size);
         p->size += index.size;
 
         /* reevaluate the size map */

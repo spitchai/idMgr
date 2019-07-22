@@ -22,7 +22,8 @@ main()
 
   /* allocate 4K index */
   for(int i = 0; i < 4096; ++i) {
-    int sz = getRandom() % 128;
+  //for(int i = 0; i < 5; ++i) {
+    int sz = getRandom() % 128 + 1;
     struct id ent = idx.indexAlloc(sz);
     //printf("add-ent %d %d %d\n", ent.start, ent.size, ent.tId);
     ut_map.push_back(ent);
@@ -30,15 +31,18 @@ main()
 
   /* delete 1K entries */
   for(int i = 0; i < 1024; ++i) {
+  //for(int i = 0; i < 2; ++i) {
     auto x = getRandom() % 2048;
     auto ent = ut_map[x];
+    ut_map.erase(ut_map.begin() + x);
     //printf("del-ent %d %d %d\n", ent.start, ent.size, ent.tId);
     idx.indexDeAlloc(ent);
   }
 
   /* allocate 4K index */
   for(int i = 0; i < 4096; ++i) {
-    int sz = getRandom() % 128;
+  //for(int i = 0; i < 5; ++i) {
+    int sz = getRandom() % 128 + 1;
     struct id ent = idx.indexAlloc(sz);
     //printf("add-ent %d %d %d\n", ent.start, ent.size, ent.tId);
     ut_map.push_back(ent);
